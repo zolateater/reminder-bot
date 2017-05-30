@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  postgres:
+    image: "postgres:9.6"
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: reminder_bot
+      POSTGRES_USER: reminder_bot
+      POSTGRES_DB: reminder_bot
+    volumes:
+      - reminder_bot_db:/var/lib/postgres/data
+  rabbitmq:
+    image: "rabbitmq:3.6.9-management"
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    environment:
+      RABBITMQ_DEFAULT_USER: "guest"
+      RABBITMQ_DEFAULT_PASS: "guest"
+    volumes:
+      - reminder_bot_rabbitmq:/var/lib/rabbitmq
+
+volumes:
+  reminder_bot_db: {}
+  reminder_bot_rabbitmq: {}
+
