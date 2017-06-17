@@ -1,14 +1,23 @@
 import dotenv
 import os
 
-# This class encapsulates how we store config settings
+
 class Config():
-    # Constants from .env file
+    """
+    This class encapsulates how we store config settings
+    Below are constants from .env file
+    """
     API_TOKEN = 'API_TOKEN'
     RABBITMQ_HOST = 'RABBITMQ_HOST'
     RABBITMQ_PORT = 'RABBITMQ_PORT'
     RABBITMQ_QUEUE_UPDATES = 'RABBITMQ_QUEUE_UPDATES'
     RABBITMQ_QUEUE_MESSAGES = 'RABBITMQ_QUEUE_MESSAGES'
+    DB_DRIVER = 'DB_DRIVER'
+    DB_HOST = 'DB_HOST'
+    DB_PORT = 'DB_PORT'
+    DB_USER = 'DB_USER'
+    DB_PASSWORD = 'DB_PASSWORD'
+    DB_DATABASE = 'DB_DATABASE'
 
     def __init__(self, file_name: str):
         dotenv.load_dotenv(file_name)

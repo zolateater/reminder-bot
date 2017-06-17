@@ -24,7 +24,7 @@ class TelegramClient():
         """
         self.handler = handler
 
-    def start_listening(self, timeout: int = 100):
+    def start_listening(self, timeout: int = 5):
         """
         Starts listening.
         Blocks execution until messages is received.

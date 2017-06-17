@@ -3,7 +3,7 @@ import pika
 from .config import Config, ConfigFactory
 
 # This class allows us to encapsulate what message queue we are using
-class Queue(ABC):
+class QueueConnection(ABC):
     @abstractmethod
     def set_handler(self, callback: callable) -> None:
         pass
@@ -16,8 +16,12 @@ class Queue(ABC):
     def start_listening(self) -> None:
         pass
 
+    @abstractmethod
+    def close(self) -> None:
+        pass
+
 # Specific RabbitMQ implementation of Queue
-class RabbitQueue(Queue):
+class RabbitConnection(QueueConnection):
     def __init__(self, queue_name: str, host: str, port: int):
         self.queue_name = queue_name
         self.connection = pika.BlockingConnection(pika.ConnectionParameters(host, port))
@@ -44,14 +48,14 @@ class RabbitQueue(Queue):
             properties=pika.BasicProperties(delivery_mode=2, )
         )
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def close(self):
         self.connection.close()
 
 # Allows to construct a queue easily
 class QueueFactory():
     @staticmethod
-    def queue_from_config(queue_name: str, config: Config) -> Queue:
-        return RabbitQueue(
+    def queue_from_config(queue_name: str, config: Config) -> QueueConnection:
+        return RabbitConnection(
             queue_name=queue_name,
             host=config.get(Config.RABBITMQ_HOST),
             port=int(config.get(Config.RABBITMQ_PORT))
