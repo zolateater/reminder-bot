@@ -6,7 +6,8 @@ import sys
 from os.path import abspath, dirname
 
 
-# Path to sources dir
+# Path to sources dir. We need to include a config since
+# we want one source of the truth.
 src_dir_path = dirname(dirname((abspath(__file__))))
 sys.path.insert(0, src_dir_path)
 
@@ -43,7 +44,7 @@ def engine_from_app_config(configuration, prefix='sqlalchemy.', **kwargs):
                    if key.startswith(prefix))
     options['_coerce_config'] = True
     options.update(kwargs)
-    url = app.db.DBConnection.connection_string_from_config()
+    url = app.db.DBConnectionFactory.connection_string_from_config()
     return create_engine(url, **options)
 
 def run_migrations_offline():
@@ -58,7 +59,7 @@ def run_migrations_offline():
     script output.
 
     """
-    url = app.db.DBConnection.connection_string_from_config()
+    url = app.db.DBConnectionFactory.connection_string_from_config()
     context.configure(
         url=url, target_metadata=target_metadata, literal_binds=True)
 

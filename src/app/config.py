@@ -18,6 +18,7 @@ class Config():
     DB_USER = 'DB_USER'
     DB_PASSWORD = 'DB_PASSWORD'
     DB_DATABASE = 'DB_DATABASE'
+    LOG_LEVEL = "LOG_LEVEL"
 
     def __init__(self, file_name: str):
         dotenv.load_dotenv(file_name)
@@ -30,8 +31,8 @@ class ConfigFactory():
     # Path to .env from current file
     DEFAULT_PATH = "../../.env"
 
-    @staticmethod
-    def get_default() -> Config:
+    @classmethod
+    def get_default(cls) -> Config:
         """
         returns Config which is constructed from DEFAULT_PATH
         :return Config:
