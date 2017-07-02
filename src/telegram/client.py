@@ -2,9 +2,13 @@ import json
 from .request import *
 
 """
-Contains all methods to interact Telegram API
+Фасад для взаимодействия с API телеграма.
+Содержит высокоуровневые методы, полагаясь на подклассы в вопросе делалей
 """
 class TelegramClient():
+
+    ATTEMPTS = 0
+
     def __init__(self, request_builder: RequestBuilder, client: AbstractHttpClient):
         """
         :param RequestBuilder request_builder:
@@ -24,17 +28,7 @@ class TelegramClient():
         """
         self.handler = handler
 
-    def start_listening(self, timeout: int = 5):
-        """
-        Starts listening.
-        Blocks execution until messages is received.
-        :param timeout: This param is passed to the http request
-        :return:
-        """
-        while True:
-            self.listen_once(timeout)
-
-    def send_message(self, chat_id: str, text: str, parse_mode: str) -> TelegramResponse:
+    def send_message(self, chat_id: str, text: str, parse_mode: str='html') -> TelegramResponse:
         """
         Execute sendMessage API method
         :param chat_id:
@@ -49,11 +43,13 @@ class TelegramClient():
         }
         return self.client.exec(self.request_builder.build("sendMessage", RequestBuilder.HTTP_POST, params))
 
-    def listen_once(self, timeout: int = 0) -> None:
+    def listen(self, timeout: int=5) -> None:
         """
-        :param timeout:
+        Blocks execution until messages is received.
+        :param int timeout:
         :return:
         """
+
         request = self.build_get_updates_request(self.last_update_id, timeout)
         response = self.client.exec(request)
         json_response = json.loads(str(response.body, 'utf8'))

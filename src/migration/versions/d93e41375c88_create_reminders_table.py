@@ -21,10 +21,11 @@ def upgrade():
         'reminders',
         sa.Column('id', sa.BigInteger, primary_key=True, autoincrement=True),
         sa.Column('chat_id', sa.BigInteger, index=True),
-        sa.Column('message_text', sa.Text),
+        sa.Column('time_text', sa.Text),
+        sa.Column('message_text', sa.Text, nullable=True),
+        sa.Column('interval_serialized', sa.Text, nullable=True),
         sa.Column('remind_at', sa.DateTime, index=True),
         sa.Column('is_repeatable', sa.Boolean),
-        sa.Column('interval_text', sa.Unicode(100))
     )
 
 

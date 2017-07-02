@@ -1,7 +1,7 @@
 # IDE files
 /.idea/
 
-# Environment fiels
+# Environment
 /env/
 .env
 
@@ -9,3 +9,6 @@
 __pycache__/
 *.py[cod]
 /.cache
+
+# Logs
+/log/*.log

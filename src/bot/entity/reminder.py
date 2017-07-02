@@ -5,11 +5,12 @@ class Reminder(declarative_base()):
     """
     Модель, представляющая напоминание.
     """
-    __tablename__ = 'users'
+    __tablename__ = 'reminders'
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
-    chat_id = Column(BigInteger)
-    message_text = Column(Text)
-    remind_at = Column(DateTime)
+    chat_id = Column(BigInteger, index=True)
+    time_text = Column(Text)
+    message_text = Column(Text, nullable=True)
+    interval_serialized = Column(Text, nullable=True)
+    remind_at = Column(DateTime, index=True)
     is_repeatable = Column(Boolean)
-    interval_text = Column(String)

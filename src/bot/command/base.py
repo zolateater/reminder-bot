@@ -1,5 +1,5 @@
-from src.telegram.client import TelegramClient
-from src.telegram.type import *
+from ...telegram.client import TelegramClient
+from ...telegram.type import *
 from abc import ABC, abstractmethod
 
 class Command(ABC):

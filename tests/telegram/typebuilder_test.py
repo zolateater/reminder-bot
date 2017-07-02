@@ -14,6 +14,7 @@ class TestUserBuilder(unittest.TestCase):
         except ParseError as e:
             exception = e
 
+        # pytest не позволяет настолько детально проверить исключение.
         assert isinstance(exception, ParseError)
         assert exception.class_name == "User"
         assert exception.payload == 1

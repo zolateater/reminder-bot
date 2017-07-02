@@ -40,6 +40,7 @@ class RabbitConnection(QueueConnection):
         self.channel.start_consuming()
 
     def push_message(self, message: bytearray):
+        print("Pushing message")
         self.channel.basic_publish(
             exchange='',
             routing_key=self.queue_name,

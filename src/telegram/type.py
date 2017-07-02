@@ -1,6 +1,6 @@
 import enum
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 
 """
 For all available types see:
@@ -90,17 +90,39 @@ class MessageEntity():
         self.length = length
         self.url = url
         self.user = user
+        # Текст MessageEntity (например - команда)
+        self.__text = ""
+
+    @property
+    def text(self):
+        return self.__text
+
+    @text.setter
+    def text(self, value: str):
+        self.__text = value
+
+    def extract_text_from(self, text: str) -> str:
+        """
+        Вырезает из текста кусок, относящийся к текущему MessageEntity.
+        Определяется по offset и length.
+        :param str text:
+        :return str:
+        """
+        return text[self.offset:self.length]
 
 
 class Message():
-    def __init__(self, id: int, date: datetime, chat: Chat, text: str = "", user_from: User = None, entities: List[MessageEntity]=None):
+    """
+    Класс, представляющий собой сообщение от telegram.
+    """
+    def __init__(self, id: int, date: datetime, chat: Chat, text: str = "", user_from: Optional[User] = None, entities: Optional[List[MessageEntity]]=None):
         """
         :param int id: Unique message identifier inside this chat
         :param int date: Date the message was sent in Unix time
         :param Chat chat: Conversation the message belongs to
         :param str text: For text messages, the actual UTF-8 text of the message, 0-4096 characters.
         :param User user_from: Sender, can be empty for messages sent to channels
-        :param list entities: Array of MessageEntity. For text messages, special entities like usernames, URLs, bot commands, etc. that appear in the text
+        :param Optional[List[MessageEntity]] entities: Array of MessageEntity. For text messages, special entities like usernames, URLs, bot commands, etc. that appear in the text
         """
         if entities is None:
             entities = []
@@ -110,6 +132,29 @@ class Message():
         self.text = text
         self.user_from = user_from
         self.entities = entities
+
+    def get_text_without_entities(self) -> str:
+        """
+        Возвращает текст сообщения без MessageEntity (упомининаний, команд и т.д.).
+        Не удаляет пробелы.
+        :param self:
+        :return str:
+        """
+
+        # Сортировка нужна чтобы у нас не было ошибок,
+        # вызванных сдвигом текста при удалении куска с текстом команды
+        self.entities.sort(key=lambda e: e.offset)
+
+        strip_offset = 0
+        current_text = self.text
+
+        for entity in self.entities:
+            start_strip_index = entity.offset - strip_offset
+            end_strip_index = entity.offset + entity.length - strip_offset
+            current_text = current_text[0:start_strip_index] + current_text[end_strip_index:]
+            strip_offset += entity.length
+
+        return current_text
 
 
 class Update():

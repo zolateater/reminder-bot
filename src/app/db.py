@@ -28,10 +28,11 @@ class DBConnectionFactory():
         )
 
     @classmethod
-    def get_session(cls):
+    def get_session(cls) -> Session:
         """
         Get Session instance from engine created from config.
         :return:
         """
         engine = create_engine(cls.connection_string_from_config())
-        return sessionmaker(engine)
+        Session = sessionmaker(engine)
+        return Session()

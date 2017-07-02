@@ -62,8 +62,6 @@ class UserBuilder(AbstractBuilder):
             language_code=telegram_data.get('language_code')
         )
 
-
-
 class ChatBuilder(AbstractBuilder):
     """
     Chat object builder
@@ -113,19 +111,25 @@ class MessageBuilder(AbstractBuilder):
         chat = ChatBuilder().build(telegram_data['chat'])
         user_from = None
         entities = None
+        message_text = telegram_data['text']
 
         if 'from' in telegram_data:
             user_from = UserBuilder().build(telegram_data['from'])
 
+        # Создание MessageEntity с текстом
         if 'entities' in telegram_data:
             entity_builder = MessageEntityBuilder()
-            entities = [entity_builder.build(x) for x in telegram_data['entities']]
+            entities = []
+            for entity_data in telegram_data['entities']:
+                entity = entity_builder.build(entity_data)
+                entity.text = entity.extract_text_from(message_text)
+                entities.append(entity)
 
         return Message(
             id=telegram_data['message_id'],
             date=datetime.fromtimestamp(int(telegram_data['date'])),
             chat=chat,
-            text=telegram_data['text'],
+            text=message_text,
             user_from=user_from,
             entities=entities
         )
@@ -136,7 +140,6 @@ class UpdateBuilder(AbstractBuilder):
     """
     @exception_as_parse_error
     def build(self, telegram_data: dict) -> Update:
-        # pdb.set_trace()
         return Update(
             int(telegram_data['update_id']),
             MessageBuilder().build(telegram_data['message']) if 'message' in telegram_data else None

@@ -42,15 +42,15 @@ class RequestBuilder():
     HTTP_GET = 'GET'
     HTTP_POST = 'POST'
 
-    @staticmethod
-    def is_method_allowed(http_method: str) -> bool:
+    @classmethod
+    def is_method_allowed(cls, http_method: str) -> bool:
         """
         Method which allows to validate if HTTP method is supported
         by current application.
         :param http_method:
         :return:
         """
-        return http_method in [__class__.HTTP_GET, __class__.HTTP_POST]
+        return http_method in [cls.HTTP_GET, cls.HTTP_POST]
 
     def __init__(self, token: str):
         """
@@ -78,8 +78,8 @@ class RequestBuilder():
         return TelegramRequest(url=url, http_method=http_method, params=params)
 
 """
-Abstract telegram client.
-We can easily mock http client and make tests.
+Абстрактный HTTP-клиент.
+Наличие всего одного метода позволяет достаточно просто подменить клиент.
 """
 class AbstractHttpClient(ABC):
     @abstractmethod
