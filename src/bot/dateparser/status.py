@@ -6,8 +6,8 @@ class DateSearchStatus():
     Класс, представляющий статус поиска даты, времени и интервала.
     Используется для того чтобы передавать данные между парсерами дат и представлять результат парсинга.
     """
-    def __init__(self, current_date: Datetime):
-        self.__current_date = current_date
+    def __init__(self, current_datetime: Datetime):
+        self.__current_datetime = current_datetime
         self.__date = None
         self.__time = None
         self.__interval = None
@@ -35,3 +35,7 @@ class DateSearchStatus():
     @interval.setter
     def interval(self, delta: Timedelta):
         self.__interval = delta
+
+    @property
+    def current_datetime(self) -> Datetime:
+        return self.__current_datetime

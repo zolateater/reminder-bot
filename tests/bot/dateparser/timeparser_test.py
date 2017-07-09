@@ -25,6 +25,14 @@ def test_trailing_zeros():
     assert status.time.hour == 9
     assert status.time.minute == 9
 
+def test_no_trailing_zeros():
+    status = DateSearchStatus(datetime.now())
+
+    TimeParser().search("в 1:09", status)
+    assert isinstance(status.time, time)
+    assert status.time.hour == 1
+    assert status.time.minute == 9
+
 
 def test_incorrect_time_in_message():
     status = DateSearchStatus(datetime.now())

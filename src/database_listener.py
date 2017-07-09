@@ -7,16 +7,23 @@ from app.db import DBConnectionFactory
 from bot.listeners.database import DatabaseListener
 from datetime import datetime
 from time import sleep
+from pickle import dumps
 
 # Зависимости слушателя.
 config = ConfigFactory.get_default()
-queue = QueueFactory.queue_from_config(config.get(Config.RABBITMQ_QUEUE_MESSAGES), config)
 log = LogFactory.from_config()
 db_session = DBConnectionFactory.get_session()
 
-listener = DatabaseListener(db_session, queue)
+listener = DatabaseListener(db_session)
 
 while True:
+    reminders = listener.fetch(datetime.now())
+    queue = QueueFactory.queue_from_config(config.get(Config.RABBITMQ_QUEUE_MESSAGES), config)
+
+    for reminder in reminders:
+        queue.push_message(dumps(reminder))
+
+    print("Sent {} messages...".format(len(reminders)))
+
     # TODO: sched расписальщик
-    listener.fetch(datetime.now())
-    sleep(1)
+    sleep(59)

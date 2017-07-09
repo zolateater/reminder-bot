@@ -3,7 +3,7 @@ from datetime import time
 import re
 
 class TimeParser(AbstractDateParser):
-    TIME_REGEX = r'(\d\d):(\d\d)'
+    TIME_REGEX = r'(\d\d?):(\d\d)'
     MAX_HOURS = 23
     MAX_MINUTES = 59
 

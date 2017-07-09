@@ -31,7 +31,7 @@ class ReminderListener():
         :return:
         """
         reminder = self.decode_reminder(message)
-        self.client.send_message(reminder.chat_id, reminder.message_text)
+        self.client.send_message(reminder.chat_id, self.format_reminder_message(reminder))
 
     @classmethod
     def decode_reminder(cls, message: bytes) -> Reminder:
@@ -42,3 +42,13 @@ class ReminderListener():
         """
         return loads(message)
 
+    def format_reminder_message(self, reminder: Reminder) -> str:
+        """
+        Форматирует сообщение для напоминания.
+        :param reminder:
+        :return:
+        """
+        return """
+Напоминание:
+<i>{}</i>
+        """.format(reminder.message_text)

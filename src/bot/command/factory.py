@@ -1,5 +1,5 @@
 from bot.command import Command, HelpCommand, SetReminderCommand
-from telegram.type import Message, MessageEntity, MessageEntityType
+from telegram.type import Message, MessageEntityType
 from enum import Enum, unique
 from app.db import Session
 
